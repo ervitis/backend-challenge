@@ -1,17 +1,21 @@
 package server
 
 import (
+	"context"
+	"github.com/ervitis/backend-challenge/clientrest/endpoint"
 	"github.com/ervitis/logme"
 	"net/http"
 	"os"
 	"os/signal"
+	"time"
 )
 
 type (
 	Server struct {
 		address, port string
-		router        *http.ServeMux
+		router        endpoint.IRouter
 		log           logme.Loggerme
+		srv           *http.Server
 	}
 
 	Options func(*Server)
@@ -35,7 +39,7 @@ func WithLogger(logger logme.Loggerme) Options {
 	}
 }
 
-func WithRouter(r *http.ServeMux) Options {
+func WithRouter(r endpoint.IRouter) Options {
 	return func(server *Server) {
 		server.router = r
 	}
@@ -52,7 +56,7 @@ func (s *Server) Listen() {
 
 	go func() {
 		s.log.L().Infof("server running on %s", s.getStringConnection())
-		if err := http.ListenAndServe(s.getStringConnection(), s.router); err != nil {
+		if err := s.srv.ListenAndServe(); err != nil {
 			errChannel <- err
 		}
 	}()
@@ -68,6 +72,14 @@ func (s *Server) Listen() {
 	}()
 
 	<-signals
+
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	if err := s.srv.Shutdown(ctx); err != nil {
+		s.log.L().Fatalf("error shutdown server: %s", err.Error())
+	}
+	os.Exit(0)
 }
 
 func (s *Server) getStringConnection() string {
@@ -83,6 +95,16 @@ func CreateServer(serverOptions ...Options) *Server {
 
 	if opts.router == nil {
 		panic("handler router not set with WithRouter")
+	}
+
+	const timeout = 15 * time.Second
+
+	opts.srv = &http.Server{
+		Handler: opts.router.GetRouter(),
+		Addr: opts.getStringConnection(),
+		WriteTimeout: timeout,
+		ReadTimeout: timeout,
+		IdleTimeout: 45 * time.Second,
 	}
 
 	return opts

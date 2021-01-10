@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/ervitis/backend-challenge/clientrest/endpoint"
 	"github.com/ervitis/backend-challenge/clientrest/server"
 	"github.com/ervitis/logme"
 	"github.com/ervitis/logme/config_loaders"
-	"net/http"
 )
 
 func main() {
@@ -14,7 +14,8 @@ func main() {
 	}
 
 	logger := logme.NewLogme(loggerConfig)
-	srv := server.CreateServer(server.WithRouter(http.NewServeMux()), server.WithLogger(logger))
+	router := endpoint.NewRouter()
+	srv := server.CreateServer(server.WithRouter(router), server.WithLogger(logger))
 
 	srv.Listen()
 }
