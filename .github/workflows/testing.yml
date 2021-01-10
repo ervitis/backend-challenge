@@ -1,4 +1,4 @@
-name: acceptance
+name: testing
 on: [push, pull_request]
 jobs:
   acceptance:

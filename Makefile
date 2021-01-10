@@ -7,4 +7,6 @@ help: ## Show this help
 ##
 ### Code validation
 tests:
-	go test -v -race ./...
+	cd clientrest && go test -v -race ./... && \
+	cd .. && \
+	cd basket && go test -v -race ./...
