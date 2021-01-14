@@ -51,10 +51,11 @@ func (r *router) ApiV1() {
 	v1 := r.r.PathPrefix("/v1").Subrouter()
 
 	v1.Use([]mux.MiddlewareFunc{}...)
-	v1.HandleFunc("/basket", func(w http.ResponseWriter, r *http.Request) {}).Methods(http.MethodPost)
-	v1.HandleFunc("/basket/{id}", func(w http.ResponseWriter, r *http.Request) {}).Methods(http.MethodPut)
-	v1.HandleFunc("/basket/{id}/amount", func(w http.ResponseWriter, r *http.Request) {}).Methods(http.MethodGet)
-	v1.HandleFunc("/basket/{id}", func(w http.ResponseWriter, r *http.Request) {}).Methods(http.MethodDelete)
+	v1.HandleFunc("/basket", r.Create).Methods(http.MethodPost)
+	v1.HandleFunc("/basket/{id}/checkout", r.Checkout).Methods(http.MethodPost)
+	v1.HandleFunc("/basket/{id}", r.AddToBasket).Methods(http.MethodPut)
+	v1.HandleFunc("/basket/{id}/amount", r.GetTotalAmount).Methods(http.MethodGet)
+	v1.HandleFunc("/basket/{id}", r.RemoveAll).Methods(http.MethodDelete)
 }
 
 func (r *router) GetRouter() *mux.Router {
