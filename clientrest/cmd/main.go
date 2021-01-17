@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/ervitis/backend-challenge/clientrest/domain"
 	"github.com/ervitis/backend-challenge/clientrest/endpoint"
 	"github.com/ervitis/backend-challenge/clientrest/server"
 	"github.com/ervitis/logme"
@@ -14,7 +15,8 @@ func main() {
 	}
 
 	logger := logme.NewLogme(loggerConfig)
-	router := endpoint.NewRouter()
+	router := endpoint.NewRouter(domain.NewBasketService())
+	router.LoadApi()
 	srv := server.CreateServer(server.WithRouter(router), server.WithLogger(logger))
 
 	srv.Listen()

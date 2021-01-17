@@ -1,30 +1,36 @@
 package repository
 
 import (
-	"github.com/ervitis/backend-challenge/clientrest/domain"
+	"github.com/ervitis/backend-challenge/clientrest/model"
 	"reflect"
 	"sort"
 )
 
 type (
 	IRepository interface {
-		Save(order domain.Order) int
+		Save(order model.Order) int
 		Delete(orderID int) error
-		Update(order domain.Order) error
-		GetBy(name string, data interface{}) *domain.Order
+		Update(order model.Order) error
+		GetBy(name string, data interface{}) *model.Order
+		AddItem(orderID int, item []model.Product)
+		RemoveItem(orderID int, itemID string)
 	}
 
 	repository struct {
-		data    []domain.Order
+		data    []model.Order
 		ordered bool
 	}
 )
 
 func NewRepository() IRepository {
-	return &repository{data: make([]domain.Order, 0)}
+	return &repository{data: make([]model.Order, 0)}
 }
 
 func (repo *repository) getLastID() int {
+	if len(repo.data) == 0 {
+		return 0
+	}
+
 	if repo.ordered {
 		return repo.data[0].ID
 	}
@@ -38,7 +44,7 @@ func (repo *repository) getLastID() int {
 	return repo.data[0].ID
 }
 
-func (repo *repository) Save(order domain.Order) int {
+func (repo *repository) Save(order model.Order) int {
 	lastID := repo.getLastID() + 1
 
 	order.ID = lastID
@@ -52,13 +58,13 @@ func (repo *repository) Save(order domain.Order) int {
 func (repo *repository) Delete(orderID int) error {
 	for i, v := range repo.data {
 		if v.ID == orderID {
-			repo.data = append(repo.data[:i], repo.data[i:]...)
+			repo.data = repo.removeOrder(repo.data, i)
 		}
 	}
 	return nil
 }
 
-func (repo *repository) Update(order domain.Order) error {
+func (repo *repository) Update(order model.Order) error {
 	for k, v := range repo.data {
 		if v.ID == order.ID {
 			repo.data[k] = order
@@ -68,7 +74,7 @@ func (repo *repository) Update(order domain.Order) error {
 	return nil
 }
 
-func (repo *repository) GetBy(name string, data interface{}) *domain.Order {
+func (repo *repository) GetBy(name string, data interface{}) *model.Order {
 	for _, v := range repo.data {
 		r := reflect.ValueOf(v).Elem()
 		ty := r.Type()
@@ -80,4 +86,43 @@ func (repo *repository) GetBy(name string, data interface{}) *domain.Order {
 	}
 
 	return nil
+}
+
+func (repo *repository) AddItem(orderID int, item []model.Product) {
+	for k, v := range repo.data {
+		if v.ID == orderID {
+			repo.data[k].Products = append(repo.data[k].Products, item...)
+		}
+	}
+}
+
+func (repo *repository) RemoveItem(orderID int, itemID string) {
+	var products []model.Product
+
+	for _, v := range repo.data {
+		if v.ID == orderID {
+			products = v.Products
+			break
+		}
+	}
+
+	if products == nil {
+		return
+	}
+
+	for k, v := range products {
+		if v.ProductID == itemID {
+			products = repo.removeItems(products, k)
+		}
+	}
+}
+
+func (repo *repository) removeItems(data []model.Product, i int) []model.Product {
+	data[i] = data[len(data)-1]
+	return data[:len(data)-1]
+}
+
+func (repo *repository) removeOrder(data []model.Order, i int) []model.Order {
+	data[i] = data[len(data)-1]
+	return data[:len(data)-1]
 }

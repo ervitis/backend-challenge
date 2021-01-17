@@ -97,14 +97,19 @@ func CreateServer(serverOptions ...Options) *Server {
 		panic("handler router not set with WithRouter")
 	}
 
-	const timeout = 15 * time.Second
+	timeout := 15 * time.Second
+	idleTimeout := 45 * time.Second
+	if os.Getenv("DEBUG") != "" {
+		timeout = 240 * time.Second
+		idleTimeout = 500 * time.Second
+	}
 
 	opts.srv = &http.Server{
 		Handler: opts.router.GetRouter(),
 		Addr: opts.getStringConnection(),
 		WriteTimeout: timeout,
 		ReadTimeout: timeout,
-		IdleTimeout: 45 * time.Second,
+		IdleTimeout: idleTimeout,
 	}
 
 	return opts
