@@ -1,4 +1,40 @@
-service Basket {
+syntax = "proto3";
 
+option go_package = "github.com/ervitis/backend-challenge/protopb";
+
+package basket;
+
+message NewOrderByUser {
+  int64 userID = 1;
+}
+
+message NewOrderCreated {
+  int64 orderID = 1;
+}
+
+message OperationConfirmed {
+  bool ok = 1;
+}
+
+message Item {
+  int64 productID = 1;
+  int64 Quantity = 2;
+}
+
+message AddItemsToOrder {
+  int64 orderID = 1;
+  repeated Item items = 2;
+}
+
+message Amount {
+  float amount = 1;
+}
+
+service Basket {
+  rpc Create(NewOrderByUser) returns (NewOrderCreated);
+  rpc Checkout(NewOrderCreated) returns (OperationConfirmed);
+  rpc AddToBasket(AddItemsToOrder) returns (OperationConfirmed);
+  rpc GetTotalAmount(NewOrderCreated) returns (Amount);
+  rpc RemoveAll(NewOrderCreated) returns (OperationConfirmed);
 }
 

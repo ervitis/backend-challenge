@@ -10,3 +10,6 @@ tests:
 	cd clientrest && go test -v -race ./... && \
 	cd .. && \
 	cd basket && go test -v -race ./...
+
+dependencies:
+	go get -v -u ./...
