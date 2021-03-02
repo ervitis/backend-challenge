@@ -11,6 +11,7 @@ import (
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
+// Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
 // BasketClient is the client API for Basket service.
@@ -118,7 +119,7 @@ type UnsafeBasketServer interface {
 }
 
 func RegisterBasketServer(s grpc.ServiceRegistrar, srv BasketServer) {
-	s.RegisterService(&_Basket_serviceDesc, srv)
+	s.RegisterService(&Basket_ServiceDesc, srv)
 }
 
 func _Basket_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -211,7 +212,10 @@ func _Basket_RemoveAll_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-var _Basket_serviceDesc = grpc.ServiceDesc{
+// Basket_ServiceDesc is the grpc.ServiceDesc for Basket service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Basket_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "basket.Basket",
 	HandlerType: (*BasketServer)(nil),
 	Methods: []grpc.MethodDesc{

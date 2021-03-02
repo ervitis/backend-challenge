@@ -7,7 +7,11 @@
 package protopb
 
 import (
+	context "context"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -171,8 +175,8 @@ type Item struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ProductID int64 `protobuf:"varint,1,opt,name=productID,proto3" json:"productID,omitempty"`
-	Quantity  int64 `protobuf:"varint,2,opt,name=Quantity,proto3" json:"Quantity,omitempty"`
+	ProductID string `protobuf:"bytes,1,opt,name=productID,proto3" json:"productID,omitempty"`
+	Quantity  int64  `protobuf:"varint,2,opt,name=Quantity,proto3" json:"Quantity,omitempty"`
 }
 
 func (x *Item) Reset() {
@@ -207,11 +211,11 @@ func (*Item) Descriptor() ([]byte, []int) {
 	return file_basket_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *Item) GetProductID() int64 {
+func (x *Item) GetProductID() string {
 	if x != nil {
 		return x.ProductID
 	}
-	return 0
+	return ""
 }
 
 func (x *Item) GetQuantity() int64 {
@@ -336,7 +340,7 @@ var file_basket_proto_rawDesc = []byte{
 	0x12, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x72,
 	0x6d, 0x65, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x6f, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52,
 	0x02, 0x6f, 0x6b, 0x22, 0x40, 0x0a, 0x04, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x1c, 0x0a, 0x09, 0x70,
-	0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09,
+	0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09,
 	0x70, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x44, 0x12, 0x1a, 0x0a, 0x08, 0x51, 0x75, 0x61,
 	0x6e, 0x74, 0x69, 0x74, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x08, 0x51, 0x75, 0x61,
 	0x6e, 0x74, 0x69, 0x74, 0x79, 0x22, 0x4f, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x49, 0x74, 0x65, 0x6d,
@@ -510,4 +514,228 @@ func file_basket_proto_init() {
 	file_basket_proto_rawDesc = nil
 	file_basket_proto_goTypes = nil
 	file_basket_proto_depIdxs = nil
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConnInterface
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion6
+
+// BasketClient is the client API for Basket service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type BasketClient interface {
+	Create(ctx context.Context, in *NewOrderByUser, opts ...grpc.CallOption) (*NewOrderCreated, error)
+	Checkout(ctx context.Context, in *NewOrderCreated, opts ...grpc.CallOption) (*OperationConfirmed, error)
+	AddToBasket(ctx context.Context, in *AddItemsToOrder, opts ...grpc.CallOption) (*OperationConfirmed, error)
+	GetTotalAmount(ctx context.Context, in *NewOrderCreated, opts ...grpc.CallOption) (*Amount, error)
+	RemoveAll(ctx context.Context, in *NewOrderCreated, opts ...grpc.CallOption) (*OperationConfirmed, error)
+}
+
+type basketClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBasketClient(cc grpc.ClientConnInterface) BasketClient {
+	return &basketClient{cc}
+}
+
+func (c *basketClient) Create(ctx context.Context, in *NewOrderByUser, opts ...grpc.CallOption) (*NewOrderCreated, error) {
+	out := new(NewOrderCreated)
+	err := c.cc.Invoke(ctx, "/basket.Basket/Create", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *basketClient) Checkout(ctx context.Context, in *NewOrderCreated, opts ...grpc.CallOption) (*OperationConfirmed, error) {
+	out := new(OperationConfirmed)
+	err := c.cc.Invoke(ctx, "/basket.Basket/Checkout", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *basketClient) AddToBasket(ctx context.Context, in *AddItemsToOrder, opts ...grpc.CallOption) (*OperationConfirmed, error) {
+	out := new(OperationConfirmed)
+	err := c.cc.Invoke(ctx, "/basket.Basket/AddToBasket", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *basketClient) GetTotalAmount(ctx context.Context, in *NewOrderCreated, opts ...grpc.CallOption) (*Amount, error) {
+	out := new(Amount)
+	err := c.cc.Invoke(ctx, "/basket.Basket/GetTotalAmount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *basketClient) RemoveAll(ctx context.Context, in *NewOrderCreated, opts ...grpc.CallOption) (*OperationConfirmed, error) {
+	out := new(OperationConfirmed)
+	err := c.cc.Invoke(ctx, "/basket.Basket/RemoveAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BasketServer is the server API for Basket service.
+type BasketServer interface {
+	Create(context.Context, *NewOrderByUser) (*NewOrderCreated, error)
+	Checkout(context.Context, *NewOrderCreated) (*OperationConfirmed, error)
+	AddToBasket(context.Context, *AddItemsToOrder) (*OperationConfirmed, error)
+	GetTotalAmount(context.Context, *NewOrderCreated) (*Amount, error)
+	RemoveAll(context.Context, *NewOrderCreated) (*OperationConfirmed, error)
+}
+
+// UnimplementedBasketServer can be embedded to have forward compatible implementations.
+type UnimplementedBasketServer struct {
+}
+
+func (*UnimplementedBasketServer) Create(context.Context, *NewOrderByUser) (*NewOrderCreated, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (*UnimplementedBasketServer) Checkout(context.Context, *NewOrderCreated) (*OperationConfirmed, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Checkout not implemented")
+}
+func (*UnimplementedBasketServer) AddToBasket(context.Context, *AddItemsToOrder) (*OperationConfirmed, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddToBasket not implemented")
+}
+func (*UnimplementedBasketServer) GetTotalAmount(context.Context, *NewOrderCreated) (*Amount, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTotalAmount not implemented")
+}
+func (*UnimplementedBasketServer) RemoveAll(context.Context, *NewOrderCreated) (*OperationConfirmed, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveAll not implemented")
+}
+
+func RegisterBasketServer(s *grpc.Server, srv BasketServer) {
+	s.RegisterService(&_Basket_serviceDesc, srv)
+}
+
+func _Basket_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewOrderByUser)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BasketServer).Create(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/basket.Basket/Create",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BasketServer).Create(ctx, req.(*NewOrderByUser))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Basket_Checkout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewOrderCreated)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BasketServer).Checkout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/basket.Basket/Checkout",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BasketServer).Checkout(ctx, req.(*NewOrderCreated))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Basket_AddToBasket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddItemsToOrder)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BasketServer).AddToBasket(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/basket.Basket/AddToBasket",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BasketServer).AddToBasket(ctx, req.(*AddItemsToOrder))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Basket_GetTotalAmount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewOrderCreated)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BasketServer).GetTotalAmount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/basket.Basket/GetTotalAmount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BasketServer).GetTotalAmount(ctx, req.(*NewOrderCreated))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Basket_RemoveAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewOrderCreated)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BasketServer).RemoveAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/basket.Basket/RemoveAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BasketServer).RemoveAll(ctx, req.(*NewOrderCreated))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Basket_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "basket.Basket",
+	HandlerType: (*BasketServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Create",
+			Handler:    _Basket_Create_Handler,
+		},
+		{
+			MethodName: "Checkout",
+			Handler:    _Basket_Checkout_Handler,
+		},
+		{
+			MethodName: "AddToBasket",
+			Handler:    _Basket_AddToBasket_Handler,
+		},
+		{
+			MethodName: "GetTotalAmount",
+			Handler:    _Basket_GetTotalAmount_Handler,
+		},
+		{
+			MethodName: "RemoveAll",
+			Handler:    _Basket_RemoveAll_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "basket.proto",
 }

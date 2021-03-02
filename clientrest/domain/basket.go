@@ -1,65 +1,48 @@
 package domain
 
 import (
-	"github.com/ervitis/backend-challenge/clientrest/exceptions"
 	"github.com/ervitis/backend-challenge/clientrest/model"
-	"github.com/ervitis/backend-challenge/clientrest/repository"
+	"github.com/ervitis/backend-challenge/clientrest/rpccaller"
 )
 
 type (
 	basket struct {
-		repository repository.IRepository
+		cli rpccaller.RpcCaller
 	}
 
 	IBasket interface {
-		CreateOrder(int) int
-		UpdateOrder(order model.Order) error
-		DeleteOrder(orderID int) error
-		GetOrderBy(field string, data interface{}) *model.Order
-		AddItemToBasket(orderID int, items []model.Product) error
-		Checkout(orderID int)
-		GetTotalAmount(orderID int) int
+		CreateOrder(int) (int, error)
+		DeleteOrder(int) error
+		AddItemToBasket(int, []*model.Product) error
+		Checkout(int) error
+		GetTotalAmount(orderID int) float32
 	}
 )
 
 func NewBasketService() IBasket {
-	return &basket{repository: repository.NewRepository()}
+	return &basket{cli: rpccaller.New()}
 }
 
-func (b *basket) CreateOrder(userID int) int {
-	order := model.Order{
-		UserID:   userID,
-		Products: make([]model.Product, 0),
-	}
-
-	return b.repository.Save(order)
-}
-
-func (b *basket) UpdateOrder(order model.Order) error {
-	return b.repository.Update(order)
+func (b *basket) CreateOrder(userID int) (int, error) {
+	return b.cli.CreateOrder(userID)
 }
 
 func (b *basket) DeleteOrder(orderID int) error {
-	return b.repository.Delete(orderID)
+	return b.cli.RemoveAll(orderID)
 }
 
-func (b *basket) GetOrderBy(field string, data interface{}) *model.Order {
-	return b.repository.GetBy(field, data)
+func (b *basket) AddItemToBasket(orderID int, items []*model.Product) error {
+	return b.cli.AddToBasket(orderID, items)
 }
 
-func (b *basket) AddItemToBasket(orderID int, item []model.Product) error {
-	if order := b.repository.GetBy("orderID", orderID); order == nil {
-		return exceptions.OrderNotFound(orderID)
+func (b *basket) GetTotalAmount(orderID int) float32 {
+	amount, err := b.cli.GetTotalAmount(orderID)
+	if err != nil {
+
 	}
-
-	b.repository.AddItem(orderID, item)
-	return nil
+	return amount
 }
 
-func (b *basket) GetTotalAmount(orderID int) int {
-	return 1
-}
-
-func (b *basket) Checkout(orderID int) {
-
+func (b *basket) Checkout(orderID int) error {
+	return b.cli.CheckOutOrder(orderID)
 }

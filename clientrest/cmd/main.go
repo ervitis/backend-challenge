@@ -3,10 +3,15 @@ package main
 import (
 	"github.com/ervitis/backend-challenge/clientrest/domain"
 	"github.com/ervitis/backend-challenge/clientrest/endpoint"
+	"github.com/ervitis/backend-challenge/clientrest/infra"
 	"github.com/ervitis/backend-challenge/clientrest/server"
 	"github.com/ervitis/logme"
 	"github.com/ervitis/logme/config_loaders"
 )
+
+func init() {
+	infra.LoadConfig()
+}
 
 func main() {
 	loggerConfig, err := config_loaders.NewEnvLogme()

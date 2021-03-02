@@ -6,6 +6,7 @@ require (
 	github.com/ervitis/logme v1.0.0
 	github.com/golang/protobuf v1.4.3
 	github.com/gorilla/mux v1.8.0
+	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.6.1

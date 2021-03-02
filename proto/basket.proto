@@ -17,7 +17,7 @@ message OperationConfirmed {
 }
 
 message Item {
-  int64 productID = 1;
+  string productID = 1;
   int64 Quantity = 2;
 }
 
