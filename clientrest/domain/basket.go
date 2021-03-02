@@ -1,8 +1,10 @@
 package domain
 
 import (
+	"github.com/ervitis/backend-challenge/clientrest/infra"
 	"github.com/ervitis/backend-challenge/clientrest/model"
 	"github.com/ervitis/backend-challenge/clientrest/rpccaller"
+	"github.com/ervitis/logme"
 )
 
 type (
@@ -19,8 +21,8 @@ type (
 	}
 )
 
-func NewBasketService() IBasket {
-	return &basket{cli: rpccaller.New()}
+func NewBasketService(logger logme.Loggerme) IBasket {
+	return &basket{cli: rpccaller.New(infra.App.BasketAddr, logger)}
 }
 
 func (b *basket) CreateOrder(userID int) (int, error) {

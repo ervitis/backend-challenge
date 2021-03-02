@@ -2,7 +2,6 @@ package rpccaller
 
 import (
 	"context"
-	"github.com/ervitis/backend-challenge/clientrest/infra"
 	"github.com/ervitis/backend-challenge/clientrest/model"
 	protopb "github.com/ervitis/backend-challenge/proto"
 	"github.com/ervitis/logme"
@@ -31,9 +30,9 @@ type (
 	}
 )
 
-func New(serverAddr string) RpcCaller {
+func New(serverAddr string, logger logme.Loggerme) RpcCaller {
 	return &rpcCall{
-		log:        logme.NewLogme(infra.NewConfig()),
+		log:        logger,
 		serverAddr: serverAddr,
 	}
 }

@@ -19,10 +19,10 @@ func main() {
 		panic(err)
 	}
 
-	logger := logme.NewLogme(loggerConfig)
-	router := endpoint.NewRouter(domain.NewBasketService())
+	infra.Logger = logme.NewLogme(loggerConfig)
+	router := endpoint.NewRouter(domain.NewBasketService(infra.Logger))
 	router.LoadApi()
-	srv := server.CreateServer(server.WithRouter(router), server.WithLogger(logger))
+	srv := server.CreateServer(server.WithRouter(router), server.WithLogger(infra.Logger))
 
 	srv.Listen()
 }

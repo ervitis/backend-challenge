@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/ervitis/backend-challenge/clientrest/model"
+	"github.com/ervitis/backend-challenge/basket/model"
 	"reflect"
 	"sort"
 )

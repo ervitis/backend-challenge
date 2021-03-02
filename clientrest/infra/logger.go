@@ -6,6 +6,10 @@ import (
 	"os"
 )
 
+var (
+	Logger logme.Loggerme
+)
+
 type ConfigLogger struct {
 	*config_loaders.EnvLoad
 }
