@@ -8,12 +8,12 @@ import (
 
 type (
 	IRepository interface {
-		Save(order model.Order) int
-		Delete(orderID int) error
+		Save(order model.Order) int64
+		Delete(orderID int64) error
 		Update(order model.Order) error
 		GetBy(name string, data interface{}) *model.Order
-		AddItem(orderID int, item []model.Product)
-		RemoveItem(orderID int, itemID string)
+		AddItem(orderID int64, item []model.Product)
+		RemoveItem(orderID int64, itemID string)
 	}
 
 	repository struct {
@@ -26,7 +26,7 @@ func NewRepository() IRepository {
 	return &repository{data: make([]model.Order, 0)}
 }
 
-func (repo *repository) getLastID() int {
+func (repo *repository) getLastID() int64 {
 	if len(repo.data) == 0 {
 		return 0
 	}
@@ -44,7 +44,7 @@ func (repo *repository) getLastID() int {
 	return repo.data[0].ID
 }
 
-func (repo *repository) Save(order model.Order) int {
+func (repo *repository) Save(order model.Order) int64 {
 	lastID := repo.getLastID() + 1
 
 	order.ID = lastID
@@ -55,7 +55,7 @@ func (repo *repository) Save(order model.Order) int {
 	return order.ID
 }
 
-func (repo *repository) Delete(orderID int) error {
+func (repo *repository) Delete(orderID int64) error {
 	for i, v := range repo.data {
 		if v.ID == orderID {
 			repo.data = repo.removeOrder(repo.data, i)
@@ -88,7 +88,7 @@ func (repo *repository) GetBy(name string, data interface{}) *model.Order {
 	return nil
 }
 
-func (repo *repository) AddItem(orderID int, item []model.Product) {
+func (repo *repository) AddItem(orderID int64, item []model.Product) {
 	for k, v := range repo.data {
 		if v.ID == orderID {
 			repo.data[k].Products = append(repo.data[k].Products, item...)
@@ -96,7 +96,7 @@ func (repo *repository) AddItem(orderID int, item []model.Product) {
 	}
 }
 
-func (repo *repository) RemoveItem(orderID int, itemID string) {
+func (repo *repository) RemoveItem(orderID int64, itemID string) {
 	var products []model.Product
 
 	for _, v := range repo.data {

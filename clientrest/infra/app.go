@@ -1,6 +1,9 @@
 package infra
 
-import "github.com/kelseyhightower/envconfig"
+import (
+	"github.com/kelseyhightower/envconfig"
+	"os"
+)
 
 type (
 	AppConfig struct {
@@ -14,5 +17,7 @@ var (
 )
 
 func LoadConfig() {
+	_ = os.Setenv("LOG_LEVEL", "DEBUG")
+	_ = os.Setenv("LOG_FIELDS", "[component=client,service=basket]")
 	envconfig.MustProcess("", &App)
 }

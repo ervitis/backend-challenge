@@ -15,7 +15,7 @@ type (
 	IBasket interface {
 		CreateOrder(int) (int, error)
 		DeleteOrder(int) error
-		AddItemToBasket(int, []*model.Product) error
+		AddItemToBasket(int, []model.Product) error
 		Checkout(int) error
 		GetTotalAmount(orderID int) float32
 	}
@@ -33,7 +33,7 @@ func (b *basket) DeleteOrder(orderID int) error {
 	return b.cli.RemoveAll(orderID)
 }
 
-func (b *basket) AddItemToBasket(orderID int, items []*model.Product) error {
+func (b *basket) AddItemToBasket(orderID int, items []model.Product) error {
 	return b.cli.AddToBasket(orderID, items)
 }
 

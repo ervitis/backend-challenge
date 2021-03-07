@@ -17,7 +17,10 @@ func (rt *router) Create(_ http.ResponseWriter, r *http.Request) (Responder, err
 		return nil, BadRequest("invalid body")
 	}
 
-	orderID := rt.service.CreateOrder(createOrder.UserID)
+	orderID, err := rt.service.CreateOrder(createOrder.UserID)
+	if err != nil {
+		return nil, InternalServer("Internal error")
+	}
 	return Created(WithBody(map[string]interface{}{"orderId": orderID})), nil
 }
 
@@ -27,7 +30,9 @@ func (rt *router) Checkout(_ http.ResponseWriter, r *http.Request) (Responder, e
 		return nil, BadRequest("orderId not valid")
 	}
 
-	rt.service.Checkout(orderID)
+	if err := rt.service.Checkout(orderID); err != nil {
+		return nil, InternalServer("Internal error")
+	}
 	return Ok(), nil
 }
 

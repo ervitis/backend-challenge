@@ -3,14 +3,14 @@ package model
 type (
 	Product struct {
 		ProductID string
-		Price     string
+		Price     float64
 		Name      string
 		Quantity  int
 	}
 
 	Order struct {
-		ID       int
-		UserID   int
+		ID       int64
+		UserID   int64
 		Products []Product
 	}
 )

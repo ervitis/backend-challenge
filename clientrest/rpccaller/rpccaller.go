@@ -24,7 +24,7 @@ type (
 		Close() error
 		CreateOrder(int) (int, error)
 		CheckOutOrder(int) error
-		AddToBasket(int, []*model.Product) error
+		AddToBasket(int, []model.Product) error
 		GetTotalAmount(int) (float32, error)
 		RemoveAll(int) error
 	}
@@ -71,7 +71,7 @@ func (rpc *rpcCall) CheckOutOrder(orderID int) error {
 	return nil
 }
 
-func (rpc *rpcCall) AddToBasket(orderID int, items []*model.Product) error {
+func (rpc *rpcCall) AddToBasket(orderID int, items []model.Product) error {
 	var carItems []*protopb.Item
 	for _, item := range items {
 		ci := &protopb.Item{

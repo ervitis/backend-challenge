@@ -35,6 +35,10 @@ type (
 	ServiceUnavailableError struct {
 		errorHandler *errorHandler
 	}
+
+	InternalServerError struct {
+		errorHandler *errorHandler
+	}
 )
 
 func newErrorResponse(msg string, code int) *errorResponse {
@@ -70,6 +74,18 @@ func (e *BadRequestError) RespondError(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *BadRequestError) Error() string {
+	return e.errorHandler.Error()
+}
+
+func InternalServer(msg string) *InternalServerError {
+	return &InternalServerError{errorHandler: newErrorHandler(msg, http.StatusInternalServerError)}
+}
+
+func (e *InternalServerError) RespondError(w http.ResponseWriter, r *http.Request) {
+	e.errorHandler.RespondError(w, r)
+}
+
+func (e *InternalServerError) Error() string {
 	return e.errorHandler.Error()
 }
 

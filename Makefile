@@ -11,3 +11,9 @@ tests: ## Test the client and backend
 
 dependencies: ## Download dependencies
 	go get -v -u ./...
+
+client: ## Run client
+	go run clientrest/cmd/main.go
+
+server: ## Run server
+	go run basket/cmd/main.go
