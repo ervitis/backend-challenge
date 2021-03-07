@@ -3,7 +3,7 @@ module github.com/ervitis/backend-challenge/basket
 go 1.16
 
 require (
-	github.com/ervitis/backend-challenge v0.0.0-20210302195609-110379ae39ca
+	github.com/ervitis/backend-challenge v0.0.0-20210307222458-60432e3398fe
 	github.com/ervitis/logme v1.0.0
 	github.com/google/uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.2

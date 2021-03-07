@@ -10,8 +10,8 @@ github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymF
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.9-0.20201210154907-fd9021fe5dad/go.mod h1:cXg6YxExXjJnVBQHBLXeUAgxn2UodCpnH306RInaBQk=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
-github.com/ervitis/backend-challenge v0.0.0-20210302195609-110379ae39ca h1:bKsgS8LDxqCmy6aqU5Xu02suSEm9+2vwZHrtT4XaWxc=
-github.com/ervitis/backend-challenge v0.0.0-20210302195609-110379ae39ca/go.mod h1:kvEl1sRIHmq+UjW1d3WWiqIC7VPKg9RHetj06PjvIfU=
+github.com/ervitis/backend-challenge v0.0.0-20210307222458-60432e3398fe h1:fZEd7dNkh9OjVh8nOoQBgu1Q5QLbkn8fNFnsYrVp1Xw=
+github.com/ervitis/backend-challenge v0.0.0-20210307222458-60432e3398fe/go.mod h1:NQafN92bGdM0bmQaCO0etGXPV0sCsSCnuv4hbKez6dE=
 github.com/ervitis/logme v1.0.0 h1:ayxGbcIhlFD5uq6ESNj4PCwi2yiaCqNQPDsUQDbPDuk=
 github.com/ervitis/logme v1.0.0/go.mod h1:WqlLMBJ0fux2Mlmwstcq4Bui5h/OxU0BFHM+BdAJyi8=
 github.com/facebookgo/stack v0.0.0-20160209184415-751773369052/go.mod h1:UbMTZqLaRiH3MsBH8va0n7s1pQYcu3uTb8G4tygF4Zg=
