@@ -8,8 +8,7 @@ import (
 
 type (
 	IRouter interface {
-		GetRouter() protopb.BasketServer
-
+		GetRouter() *router
 		Create(context.Context, *protopb.NewOrderByUser) (*protopb.NewOrderCreated, error)
 		Checkout(context.Context, *protopb.NewOrderCreated) (*protopb.OperationConfirmed, error)
 		AddToBasket(context.Context, *protopb.AddItemsToOrder) (*protopb.OperationConfirmed, error)
@@ -18,16 +17,15 @@ type (
 	}
 
 	router struct {
-		r protopb.BasketServer
-
+		protopb.UnimplementedBasketServer
 		service domain.IBasket
 	}
 )
 
-func (rt *router) GetRouter() protopb.BasketServer {
-	return rt.r
+func (rt *router) GetRouter() *router {
+	return rt
 }
 
-func NewRouter(svc domain.IBasket) IRouter {
+func NewRouter(svc domain.IBasket) *router {
 	return &router{service: svc}
 }

@@ -46,6 +46,9 @@ func (rpc *rpcCall) Open() error {
 		}
 		rpc.conn = conn
 	}
+	if rpc.basketClient == nil {
+		rpc.basketClient = protopb.NewBasketClient(rpc.conn)
+	}
 	return nil
 }
 
