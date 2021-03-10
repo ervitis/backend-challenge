@@ -17,3 +17,8 @@ client: ## Run client
 
 server: ## Run server
 	go run basket/cmd/main.go
+
+compile: ## Compile client and server
+	cd basket/cmd && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o basketserver ./... && mv basketserver ../ && \
+	cd ../.. && \
+	cd clientrest/cmd && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o basketclient ./... && mv basketclient ../

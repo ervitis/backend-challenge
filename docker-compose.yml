@@ -1,0 +1,20 @@
+version: '3'
+services:
+
+  basketserver:
+    build:
+      context: basket
+      dockerfile: Dockerfile
+    ports:
+    - 8181:8181
+    network_mode: host
+
+  clientrest:
+    build:
+      context: clientrest
+      dockerfile: Dockerfile
+    ports:
+    - 8080:8080
+    depends_on:
+      - basketserver
+    network_mode: host
